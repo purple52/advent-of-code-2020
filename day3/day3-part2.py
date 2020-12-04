@@ -3,11 +3,11 @@ from functools import reduce
 
 
 def tree_count(lines, dx, dy):
-    return [*map(lambda y_line: has_tree(y_line[1], dx, dy, y_line[0]), enumerate(lines))].count(True)
+    return [*map(lambda y: has_tree(lines[y], dx, dy, y), range(0, len(lines), dy))].count(True)
 
 
 def has_tree(line, dx, dy, y):
-    return y % dy == 0 and line[(int(y / dy) * dx) % len(line)] == '#'
+    return line[(int(y / dy) * dx) % len(line)] == '#'
 
 
 def multiply_tree_counts(slopes):
