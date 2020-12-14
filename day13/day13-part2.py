@@ -2,6 +2,7 @@ from collections import namedtuple
 from math import prod
 
 Bus = namedtuple('Bus', ['offset', 'id'])
+Congruence = namedtuple('Congruence', ['modulus', 'remainder'])
 
 
 def buses():
@@ -9,14 +10,19 @@ def buses():
     return [*map(lambda line: Bus(line[0], int(line[1])), filter(lambda line: line[1] != 'x', enumerate(lines)))]
 
 
-def bus_prod(bus, big_n):
-    a = bus.id - bus.offset
-    return a * pow(int(big_n / bus.id), -1, bus.id) * int(big_n / bus.id)
+def cmt(congruences):
+    prod_all_moduli = prod(map(lambda c: c.modulus, congruences))
+
+    def addend(congruence):
+        other_moduli_prod = prod_all_moduli // congruence.modulus
+        inverse_mod = pow(other_moduli_prod, -1, congruence.modulus)
+        return congruence.remainder * inverse_mod * other_moduli_prod
+
+    return sum(map(addend, congruences)) % prod_all_moduli
 
 
 def t(buses):
-    big_n = prod(map(lambda bus: bus.id, buses))
-    return sum(map(lambda bus: bus_prod(bus, big_n), buses)) % big_n
+    return cmt([*map(lambda bus: Congruence(bus.id, bus.id - bus.offset), buses)])
 
 
 def main():
