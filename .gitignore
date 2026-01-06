@@ -1,3 +1,5 @@
 .idea/
 *.iml
 venv
+**/example.txt
+**/actual.txt
